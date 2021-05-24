@@ -1,0 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'groovy'
+apply plugin: 'distribution'
+repositories {
+    mavenCentral()
+}
+
+test{
+    useTestNG()
+}
+
+task jupiterUITest(type: Test){
+    useTestNG(){
+        outputDirectory = file("$project.buildDir/testngOutput")
+        useDefaultListeners=true
+        suiteXmlFiles << new File("src/test/resources/TestNg.xml")
+        setSuiteXmlFiles(suiteXmlFiles)
+    }
+    reports {
+        html.enabled = true
+    }
+}
+
+dependencies {
+
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+    testImplementation group: 'org.testng', name: 'testng', version: '6.14.3'
+
+}

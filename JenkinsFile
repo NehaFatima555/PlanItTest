@@ -1,0 +1,7 @@
+pipeline{
+stages('Build'){
+steps{
+    bat 'gradle build jupiterUITest --info'
+}
+}
+}

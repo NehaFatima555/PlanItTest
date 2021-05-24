@@ -14,8 +14,8 @@ task jupiterUITest(type: Test){
     useTestNG(){
         outputDirectory = file("$project.buildDir/testngOutput")
         useDefaultListeners=true
-        suiteXmlFiles << new File("src/test/resources/TestNg.xml")
-        setSuiteXmlFiles(suiteXmlFiles)
+        suites "src/test/resources/TestNg.xml"
+
     }
     reports {
         html.enabled = true

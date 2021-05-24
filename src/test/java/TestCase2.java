@@ -12,8 +12,8 @@ public class TestCase2 extends UIModule {
     ContactsPage contactsPage = new ContactsPage();
     SuccessPage successPage = new SuccessPage();
 
-    @Test(invocationCount = 5)
     @Parameters("url")
+    @Test(invocationCount = 5)
     public void Test2(String url) throws Exception {
 
         initialiseDriver();

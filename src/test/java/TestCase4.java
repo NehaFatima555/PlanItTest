@@ -12,8 +12,8 @@ public class TestCase4 extends UIModule {
     CartPage cartPage = new CartPage();
     ShopPage shopPage = new ShopPage();
 
-    @Test
     @Parameters("url")
+    @Test
     public void Test4(String url) throws Exception {
 
         initialiseDriver();

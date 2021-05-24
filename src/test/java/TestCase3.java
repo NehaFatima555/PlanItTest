@@ -1,12 +1,15 @@
 import Common.UIModule;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import PageObjects.CartPage;
+import PageObjects.HomePage;
+import PageObjects.ShopPage;
 import org.testng.Assert;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 public class TestCase3 extends UIModule {
+    HomePage homePage = new HomePage();
+    ShopPage shopPage = new ShopPage();
+    CartPage cartPage = new CartPage();
 
     @Test
     @Parameters("url")
@@ -16,29 +19,27 @@ public class TestCase3 extends UIModule {
 
         //From Home Page Go to shop page
         navigateUrl(url);
-        click(By.linkText("Shop"));
+        homePage.goToShopPage();
 
-        WebDriverWait webDriverWait = new WebDriverWait(driver, 15);
-        webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText("Buy")));
+        shopPage.waitUntilPageLoads();
 
         //Click 2 times on Funny Cow
-        click(By.xpath(".//h4[contains(text(),'Funny Cow')]/ancestor::li//a"));
-        click(By.xpath("//h4[contains(text(),'Funny Cow')]/ancestor::li//a"));
+        shopPage.buyFunnyCow(2);
 
         //click 1 time on fluffy bunny
-        click(By.xpath(".//h4[contains(text(),'Fluffy Bunny')]/ancestor::li//a"));
+        shopPage.buyFluffyBunny(1);
 
         //Click on Cart menu
-        click(By.partialLinkText("Cart"));
-        int quantityIndex = getIndexofQuantity();
+        homePage.goToCart();
+        int quantityIndex = cartPage.getIndexofQuantity();
 
         //Verify Cart Menu
         Assert.assertEquals(
-                getValueAttribute(By.xpath(".//td[contains(text(),'Funny Cow')]//parent::tr/td[" + quantityIndex + "]/input")),
+                getValueAttribute(cartPage.getFunnyCowquantity(quantityIndex)),
                 "2");
 
         Assert.assertEquals(
-                getValueAttribute(By.xpath(".//td[contains(text(),'Fluffy Bunny')]//parent::tr/td[" + quantityIndex + "]/input")),
+                getValueAttribute(cartPage.getFluffyBunnyquantity(quantityIndex)),
                 "1");
 
         closeDriver();

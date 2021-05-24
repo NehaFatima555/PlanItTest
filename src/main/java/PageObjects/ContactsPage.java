@@ -1,11 +1,17 @@
 package PageObjects;
 
 import Common.UIModule;
-import org.openqa.selenium.By;
+import ObjectRepository.Contacts;
 
 public class ContactsPage extends UIModule {
 
-    public void submit() throws Exception{
-        click(By.linkText("Submit"));
+    public void submit() throws Exception {
+        click(Contacts.SUBMITLINK);
+    }
+
+    public void populateMandatoryFields() throws Exception {
+        enterText(Contacts.FORENAMEFIELD, "Test");
+        enterText(Contacts.EMAIlFIELD, "Test.test@test.com.au");
+        enterText(Contacts.MESSAGEFILED, "Test");
     }
 }

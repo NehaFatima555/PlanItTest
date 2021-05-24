@@ -3,7 +3,6 @@ import ObjectRepository.AssertionTexts;
 import ObjectRepository.Contacts;
 import PageObjects.ContactsPage;
 import PageObjects.HomePage;
-import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -28,18 +27,16 @@ public class TestCase1 extends UIModule {
         //validate errors
 
         Assert.assertEquals(getText(Contacts.FORENAMEFIELDERROR), AssertionTexts.MTFORENAMEMANDATORY);
-        Assert.assertEquals(getText(Contacts.EMAIlFIELDERROR),AssertionTexts.MTEMAILMANDATORY );
-        Assert.assertEquals(getText(Contacts.MESSAGEFILEDERROR),AssertionTexts.MTMESSAGEMANDATORY );
+        Assert.assertEquals(getText(Contacts.EMAIlFIELDERROR), AssertionTexts.MTEMAILMANDATORY);
+        Assert.assertEquals(getText(Contacts.MESSAGEFILEDERROR), AssertionTexts.MTMESSAGEMANDATORY);
 
         //Populate mandatory fields
-        enterText(By.id("forename"), "Test");
-        enterText(By.id("email"), "Test.test@test.com.au");
-        enterText(By.id("message"), "Test");
+        contactsPage.populateMandatoryFields();
 
         //validate errors are gone
-        Assert.assertEquals(true, checkElementDoesNotExist(By.id("forename-err")));
-        Assert.assertEquals(true, checkElementDoesNotExist(By.id("email-err")));
-        Assert.assertEquals(true, checkElementDoesNotExist(By.id("message-err")));
+        Assert.assertTrue(checkElementDoesNotExist(Contacts.FORENAMEFIELDERROR));
+        Assert.assertTrue(checkElementDoesNotExist(Contacts.EMAIlFIELDERROR));
+        Assert.assertTrue(checkElementDoesNotExist(Contacts.MESSAGEFILEDERROR));
 
         closeDriver();
     }

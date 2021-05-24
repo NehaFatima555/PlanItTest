@@ -1,84 +1,72 @@
 import Common.UIModule;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import ObjectRepository.Shop;
+import PageObjects.CartPage;
+import PageObjects.HomePage;
+import PageObjects.ShopPage;
 import org.testng.Assert;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import java.math.BigDecimal;
-
 public class TestCase4 extends UIModule {
+    HomePage homePage = new HomePage();
+    CartPage cartPage = new CartPage();
+    ShopPage shopPage = new ShopPage();
 
     @Test
     @Parameters("url")
-    public void Test3(String url) throws Exception {
+    public void Test4(String url) throws Exception {
 
         initialiseDriver();
 
         //From Home Page Go to shop page
         navigateUrl(url);
-        click(By.linkText("Shop"));
+        homePage.goToShopPage();
 
-        WebDriverWait webDriverWait = new WebDriverWait(driver, 15);
-        webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText("Buy")));
+        shopPage.waitUntilPageLoads();
 
         //Buy 2 Stuffed Frog, 5 Fluffy Bunny, 3 Valentine Bear
-        click(By.xpath(".//h4[contains(text(),'Stuffed Frog')]/ancestor::li//a"));
-        click(By.xpath(".//h4[contains(text(),'Stuffed Frog')]/ancestor::li//a"));
+        shopPage.buyStuffedFrog(2);
 
-        click(By.xpath(".//h4[contains(text(),'Fluffy Bunny')]/ancestor::li//a"));
-        click(By.xpath(".//h4[contains(text(),'Fluffy Bunny')]/ancestor::li//a"));
-        click(By.xpath(".//h4[contains(text(),'Fluffy Bunny')]/ancestor::li//a"));
-        click(By.xpath(".//h4[contains(text(),'Fluffy Bunny')]/ancestor::li//a"));
-        click(By.xpath(".//h4[contains(text(),'Fluffy Bunny')]/ancestor::li//a"));
+        shopPage.buyFluffyBunny(5);
 
-        click(By.xpath(".//h4[contains(text(),'Valentine Bear')]/ancestor::li//a"));
+        shopPage.buyValentineBear(3);
 
-        String stuffedFrogPrice = getText(By.xpath(".//h4[contains(text(),'Stuffed Frog')]/ancestor::li//p//span"));
-        String fluffyBunnyPrice = getText(By.xpath(".//h4[contains(text(),'Fluffy Bunny')]/ancestor::li//p//span"));
-        String valentineBearPrice = getText(By.xpath(".//h4[contains(text(),'Valentine Bear')]/ancestor::li//p//span"));
+        String stuffedFrogPrice = getText(Shop.STUFFEDFROGPRICEFIELD);
+        String fluffyBunnyPrice = getText(Shop.FLUFFYBUNNYPRICEFIELD);
+        String valentineBearPrice = getText(Shop.VALENTINEBEARPRICEFIELD);
 
-        click(By.partialLinkText("Cart"));
+        homePage.goToCart();
 
 
-        int priceIndex = getIndexofPrice();
-        int subTotalIndex = getIndexofSubTotal();
+        int priceIndex = cartPage.getIndexofPrice();
+        int subTotalIndex = cartPage.getIndexofSubTotal();
 
-        webDriverWait.until(ExpectedConditions.presenceOfElementLocated(By.partialLinkText("Check Out")));
 
         //Verify the price for each product
         Assert.assertEquals(
-                getText(By.xpath(".//td[contains(text(),'Stuffed Frog')]//parent::tr/td[" + priceIndex + "]")),
+                getText(cartPage.getStuffedFogIndexValue(priceIndex)),
                 stuffedFrogPrice);
 
         Assert.assertEquals(
-                getText(By.xpath(".//td[contains(text(),'Fluffy Bunny')]//parent::tr/td[" + priceIndex + "]")),
+                getText(cartPage.getFluffyBunnyIndexValue(priceIndex)),
                 fluffyBunnyPrice);
 
         Assert.assertEquals(
-                getText(By.xpath(".//td[contains(text(),'Valentine Bear')]//parent::tr/td[" + priceIndex + "]")),
+                getText(cartPage.getValentineBearIndexValue(priceIndex)),
                 valentineBearPrice);
 
-        System.out.println("//td[contains(text(),'Stuffed Frog'')]//parent::tr/td[" + subTotalIndex + "]");
 
         //Verify that each product’s sub total = product price * quantity
-        Assert.assertEquals(getText(By.xpath(".//td[contains(text(),'Stuffed Frog')]//parent::tr/td[" + subTotalIndex + "]")),
-                getActualTotal(2, stuffedFrogPrice));
+        Assert.assertEquals(getText(cartPage.getStuffedFogIndexValue(subTotalIndex)),
+                cartPage.getActualTotal(2, stuffedFrogPrice));
 
-        Assert.assertEquals(getText(By.xpath(".//td[contains(text(),'Fluffy Bunny')]//parent::tr/td[" + subTotalIndex + "]")),
-                getActualTotal(5, fluffyBunnyPrice));
+        Assert.assertEquals(getText(cartPage.getFluffyBunnyIndexValue(subTotalIndex)),
+                cartPage.getActualTotal(5, fluffyBunnyPrice));
 
-        Assert.assertEquals(getText(By.xpath(".//td[contains(text(),'Valentine Bear')]//parent::tr/td[" + subTotalIndex + "]")),
-                getActualTotal(1, valentineBearPrice));
+        Assert.assertEquals(getText(cartPage.getValentineBearIndexValue(subTotalIndex)),
+                cartPage.getActualTotal(3, valentineBearPrice));
 
         closeDriver();
-    }
-
-    private String getActualTotal(float i, String price) {
-        price = price.replace("$", "");
-        String totalPrice = new BigDecimal(price).multiply(new BigDecimal(i)).toString();
-        return "$" + totalPrice;
     }
 
 

@@ -1,9 +1,9 @@
-<suite name="TestNg" verbose="1" >
-    <test name="Jupiter Toy Application Test" >
+<suite name="TestNg" verbose="1">
+    <test name="Jupiter Toy Application Test">
         <parameter name="url" value="http://jupiter.cloud.planittesting.com"/>
         <classes>
             <class name="TestCase1"/>
-            <class name="TestCase2" />
+            <class name="TestCase2"/>
             <class name="TestCase3"/>
             <class name="TestCase4"/>
         </classes>
